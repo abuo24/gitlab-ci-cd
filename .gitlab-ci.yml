@@ -19,15 +19,15 @@ build-job: # This job runs in the build stage, which runs first.
   #    - docker:20.10.16-dind
   #  variables:
   #    DOCKER_TLS_CERTDIR: "/certs"
-  #  before_script:
-  #    - docker login -u $REGISTRY_USER -p $REGISTRY_PASSWORD
+  before_script:
+    - docker login -u $REGISTRY_USER -p $REGISTRY_PASSWORD
   artifacts:
     paths:
       - target/*.jar
   script:
     - mvn package -B
-#    - docker build -t $IMAGE_NAME:$IMAGE_TAG .
-#    - docker push $IMAGE_NAME:$IMAGE_TAG
+    - docker build -t $IMAGE_NAME:$IMAGE_TAG .
+    - docker push $IMAGE_NAME:$IMAGE_TAG
 
 unit-test-job: # This job runs in the test stage.
   stage: test    # ItIMAGE_NAME only starts when the job in the build stage completes successfully.
