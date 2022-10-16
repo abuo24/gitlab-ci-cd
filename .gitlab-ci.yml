@@ -64,7 +64,8 @@ deploy:
   before_script:
     - chmod 400 $SSH_KEY
   script:
-    - ssh -o -0 vvv StrictHostKeyChecking=no -i $SSH_KEY root@165.22.49.38 "
+    - cat > ~/.ssh/temp_key $SSH_KEY
+    - ssh -o StrictHostKeyChecking=no -i ~/.ssh/temp_key root@165.22.49.38 "
       docker login -u $REGISTRY_USER -p $REGISTRY_PASSWORD &&
       docker ps -aq | xargs docker stop | xargs docker rm &&
       docker run -d -p 8080:8080 $IMAGE_NAME:$IMAGE_TAG"
