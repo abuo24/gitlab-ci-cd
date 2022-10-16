@@ -50,7 +50,7 @@ unit-test-job: # This job runs in the test stage.
 #DOCKER DRIVER: overlay
 
 docker-build:
-  stage: docker
+  stage: deploy
   script:
     docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN _registry.gitlab.com
     -docker build -t registry.gitlab.com/yogonza524/$REPO.
