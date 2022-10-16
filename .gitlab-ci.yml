@@ -9,6 +9,7 @@ variables:
 
 stages: # List of stages for jobs, and their order of execution
   - build
+  - package
   - test
   - deploy
 
@@ -21,7 +22,7 @@ maven-build:
       - target/*.jar
 
 docker-build:
-  stage: build
+  stage: package
   script:
     - docker build -t  $IMAGE_NAME:$IMAGE_TAG .
     - docker login -u $REGISTRY_USER -p $REGISTRY_PASSWORD
