@@ -50,7 +50,7 @@ unit-test-job: # This job runs in the test stage.
 #  before_script:
 #    - chmod 400 $SSH_KEY
   script:
-    - cat > ~/temp_key $SSH_KEY
+#    - cat > ~/temp_key $SSH_KEY
     - echo "hello"
 
 #lint-test-job:   # This job also runs in the test stage.
