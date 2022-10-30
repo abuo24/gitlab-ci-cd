@@ -61,12 +61,19 @@ unit-test-job: # This job runs in the test stage.
 
 deploy:
   stage: deploy
+  #  before_script:
+  #    - chmod 400 $SSH_KEY
+  #    - cat > ~/temp_key $SSH_KEY
+  #    - chmod 755  ~/temp_key
   before_script:
-    - chmod 400 $SSH_KEY
-    - cat > ~/temp_key $SSH_KEY
-    - chmod 755 ~/temp_key
+    - eval $(ssh-agent -s)
+    - echo "$SSH_KEY" | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan -i root@165.22.49.38 >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
   script:
-    - ssh -o StrictHostKeyChecking=no -i ~/temp_key root@165.22.49.38 "
+    - ssh -o -i root@165.22.49.38 "
       docker login -u $REGISTRY_USER -p $REGISTRY_PASSWORD &&
       docker ps -aq | xargs docker stop | xargs docker rm &&
       docker run -d -p 8080:8080 $IMAGE_NAME:$IMAGE_TAG"
