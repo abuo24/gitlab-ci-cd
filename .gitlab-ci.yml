@@ -47,10 +47,10 @@ docker-build:
 
 unit-test-job: # This job runs in the test stage.
   stage: test    # ItIMAGE_NAME only starts when the job in the build stage completes successfully.
-#  before_script:
-#    - chmod 400 $SSH_KEY
+  #  before_script:
+  #    - chmod 400 $SSH_KEY
   script:
-#    - cat > ~/temp_key $SSH_KEY
+    #    - cat > ~/temp_key $SSH_KEY
     - echo "hello"
 
 #lint-test-job:   # This job also runs in the test stage.
@@ -64,8 +64,16 @@ unit-test-job: # This job runs in the test stage.
 
 deploy:
   stage: deploy
-#  before_script:
-#    - chmod 400 $SSH_KEY
+  before_script:
+    #    - chmod 400 $SSH_KEY
+    - 'command -v ssh-agent >/dev/null || ( apk add --update openssh )'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan 165.22.49.38 >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+
   script:
     - ssh -o StrictHostKeyChecking=no -i $SSH_KEY root@165.22.49.38 "
       docker login -u $REGISTRY_USER -p $REGISTRY_PASSWORD &&
